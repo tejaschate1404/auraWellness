@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib import messages
 from adminUser.models import Category  # Ensure that you import your Category model
-from adminUser.models import Counselling, Category, Gmail, Phone, Image
+from adminUser.models import Counselling, CategoryPhysical, Gmail, Phone, Image
 from adminUser.models import Notes
 from django.utils import timezone
 
@@ -75,56 +75,56 @@ def addCounseling(request):
 
 
     
-def viewCounseling(request):
-    counseling_records = Counselling.objects.all()  # Fetch all records
-    return render(request, 'admin/counseling/view-counseling.html', {'counseling_records': counseling_records})
+# def viewCounseling(request):
+#     counseling_records = Counselling.objects.all()  # Fetch all records
+#     return render(request, 'admin/counseling/view-counseling.html', {'counseling_records': counseling_records})
 
 
 
 
-def view_counseling_details(request, record_id):
-    # Fetch the counseling record
-    record = get_object_or_404(Counselling, id=record_id)
+# def view_counseling_details(request, record_id):
+#     # Fetch the counseling record
+#     record = get_object_or_404(Counselling, id=record_id)
     
 
-    # Check if the request method is POST (form submission)
-    if request.method == "POST":
-        note = request.POST.get("note")  # Get the note content
-        print(note)
-        date = timezone.now()  # Get the date (ensure it’s in a correct format)
+#     # Check if the request method is POST (form submission)
+#     if request.method == "POST":
+#         note = request.POST.get("note")  # Get the note content
+#         print(note)
+#         date = timezone.now()  # Get the date (ensure it’s in a correct format)
 
-        if note and date:  # If both fields are filled
-            # Create the note linked to the counseling record
-            Notes.objects.create(person=record, note=note, created_at=date)
-            messages.success(request, "Note added successfully!")
-        else:
-            messages.error(request, "Please fill in both the note and the date.")
-
-
-    show_notes = Notes.objects.filter(person=record)  
-
-    context = {
-        'current_date': timezone.now(),
-        'record': record,
-        'show_note': show_notes
-               }
-    return render(request, 'admin/counseling/view_counseling_details.html',context)
+#         if note and date:  # If both fields are filled
+#             # Create the note linked to the counseling record
+#             Notes.objects.create(person=record, note=note, created_at=date)
+#             messages.success(request, "Note added successfully!")
+#         else:
+#             messages.error(request, "Please fill in both the note and the date.")
 
 
+#     show_notes = Notes.objects.filter(person=record)  
+
+#     context = {
+#         'current_date': timezone.now(),
+#         'record': record,
+#         'show_note': show_notes
+#                }
+#     return render(request, 'admin/counseling/view_counseling_details.html',context)
 
 
 
-def delete_counseling(request, record_id):
-    record = get_object_or_404(Counselling, id=record_id)
-    record.delete()
-    return redirect('viewCounseling')  # Redirect back to the counseling list
+
+
+# def delete_counseling(request, record_id):
+#     record = get_object_or_404(Counselling, id=record_id)
+#     record.delete()
+#     return redirect('viewCounseling')  # Redirect back to the counseling list
 
 
 
 
 
 # View for adding category
-def addCategory(request):
+def addCategoryPhysical(request):
     if request.method == 'POST':
         # Retrieve category and description from POST data
         category_name = request.POST.get('category')  # Match the field name 'category'
@@ -133,13 +133,13 @@ def addCategory(request):
         # Ensure both fields are filled
         if category_name and description:
             # Create a new Category instance and save it
-            new_category = Category(category=category_name, description=description)
+            new_category = CategoryPhysical(category=category_name, description=description)
             new_category.save()
 
             # Add a success message and redirect to the same page
             messages.success(request, 'Category has been added successfully.')
-            return redirect('addCategory')  # Redirect to the category list or same page
+            return redirect('addCategoryPhysical')  # Redirect to the category list or same page
         else:
             messages.error(request, 'Please fill in all fields.')
 
-    return render(request, 'admin/counseling/add-category.html')
+    return render(request, 'admin/physical_counseling/add-category_physical.html')
